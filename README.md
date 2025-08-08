@@ -52,30 +52,28 @@
 ---
 ```mermaid
 graph LR
-  %% Основные зоны
-  subgraph WAN [🌐 Internet WAN]
-    W1[22 TCP SSH]
-    W2[80 TCP HTTP]
-    W3[443 TCP HTTPS]
-    W4[25566–26000 TCP/UDP Minecraft]
-    W5[33186 UDP VPN]
-    W6[5900 TCP VNC]
-    W7[27231 TCP Nginx]
-    W8[53 TCP/UDP DNS trusted IP]
-    W9[123 UDP NTP trusted IP]
-    W10[3000 TCP Grafana]
+  subgraph WAN [Internet WAN]
+    W1["Port 22 TCP SSH Разрешён с WAN и LAN, лимит соединений"]:::tcp
+    W2["Port 80 TCP HTTP Пропускается из интернета, с лимитами"]:::tcp
+    W3["Port 443 TCP HTTPS Пропускается из интернета, с лимитами"]:::tcp
+    W4["Ports 25566-26000 TCP/UDP Minecraft Ограничение на pps и соединения"]:::mc
+    W5["Port 33186 UDP VPN Доступен для WAN, защищён от флуда"]:::udp
+    W6["Port 5900 TCP VNC Ограничен, чтобы избежать атак"]:::tcp
+    W7["Port 27231 TCP Nginx Открыт с лимитами"]:::tcp
+    W8["Port 53 TCP/UDP DNS Только доверенные IP"]:::dns
+    W9["Port 123 UDP NTP Только доверенные IP"]:::ntp
+    W10["Port 3000 TCP Grafana Открыт с маленькими лимитами"]:::tcp
   end
 
-  subgraph SERVER [🖥️ Server with iptables]
+  subgraph SERVER [Server with iptables]
   end
 
-  subgraph LAN [🏠 Local Area Network]
-    L1[8388 TCP/UDP Shadowsocks]
-    L2[9090 TCP Prometheus]
-    L3[9100 TCP Node Exporter]
+  subgraph LAN [Local Area Network]
+    L1["Port 8388 TCP/UDP Shadowsocks Закрыт с WAN, доступен в LAN"]:::lan
+    L2["Port 9090 TCP Prometheus Доступен только в LAN"]:::lan
+    L3["Port 9100 TCP Node Exporter Доступен только в LAN"]:::lan
   end
 
-  %% Связи
   W1 --> SERVER
   W2 --> SERVER
   W3 --> SERVER
@@ -91,10 +89,6 @@ graph LR
   SERVER --> L2
   SERVER --> L3
 
-  %% Расположение INFO справа
-  INFO --- SERVER
-
-  %% Классы для цветового выделения
   classDef tcp fill:#d4f1f9,stroke:#0077b6,stroke-width:2px,color:#003366,font-weight:bold;
   classDef udp fill:#fff3cd,stroke:#ff9800,stroke-width:2px,color:#664400,font-weight:bold;
   classDef mc fill:#e6ffe6,stroke:#4caf50,stroke-width:2px,color:#2e7d32,font-weight:bold;
@@ -102,15 +96,6 @@ graph LR
   classDef ntp fill:#ffe6e6,stroke:#f44336,stroke-width:2px,color:#b71c1c,font-weight:bold;
   classDef lan fill:#e0e0e0,stroke:#757575,stroke-width:2px,color:#222222,font-weight:bold;
 
-  %% Применяем классы к узлам WAN
-  class W1,W2,W3,W6,W7,W10 tcp;
-  class W5 udp;
-  class W4 mc;
-  class W8 dns;
-  class W9 ntp;
-
-  %% LAN
-  class L1,L2,L3 lan;
 ```
 ---
 

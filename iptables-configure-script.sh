@@ -225,6 +225,10 @@ iptables -A INPUT -p tcp --dport 27017 -s "$LAN_NET" -j ACCEPT  # MongoDB лок
 iptables -A INPUT -p tcp --dport 27017 -s "$LOOPBACK" -j ACCEPT
 iptables -A INPUT -p tcp --dport 27017 -j LOG_DROP
 
+iptables -A INPUT -p tcp --dport 3000 -s "$LAN_NET" -j ACCEPT  # Grafana локально
+iptables -A INPUT -p tcp --dport 3000 -s "$LOOPBACK" -j ACCEPT
+iptables -A INPUT -p tcp --dport 3000 -j LOG_DROP
+
 # memcached — запрещаем на WAN
 iptables -A INPUT -p tcp --dport 11211 -i "$WAN_IF" -j DROP
 iptables -A INPUT -p udp --dport 11211 -i "$WAN_IF" -j DROP

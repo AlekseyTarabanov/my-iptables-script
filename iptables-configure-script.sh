@@ -142,7 +142,7 @@ iptables -A INPUT -i "$WAN_IF" -p tcp --dport $MINE_PORT_RANGE \
 iptables -A INPUT -i "$WAN_IF" -p tcp --dport $MINE_PORT_RANGE \
   -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 10 --name MINE -j LOG_DROP
 iptables -A INPUT -i "$WAN_IF" -p tcp --dport $MINE_PORT_RANGE \
-  --syn -m hashlimit --hashlimit 50/sec --hashlimit-burst 100 --hashlimit-mode srcip \
+  --syn -m hashlimit --hashlimit 150/sec --hashlimit-burst 300 --hashlimit-mode srcip \
   --hashlimit-name mine_tcp_syn -j ACCEPT
 iptables -A INPUT -i "$WAN_IF" -p tcp --dport $MINE_PORT_RANGE -j LOG_DROP
 
@@ -152,7 +152,7 @@ iptables -A INPUT -i "$WAN_IF" -p udp --dport $MINE_PORT_RANGE \
 iptables -A INPUT -i "$WAN_IF" -p udp --dport $MINE_PORT_RANGE \
   -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 20 --name MINE_UDP -j LOG_DROP
 iptables -A INPUT -i "$WAN_IF" -p udp --dport $MINE_PORT_RANGE \
-  -m hashlimit --hashlimit 50/sec --hashlimit-burst 100 --hashlimit-mode srcip \
+  -m hashlimit --hashlimit 150/sec --hashlimit-burst 300 --hashlimit-mode srcip \
   --hashlimit-name mine_udp -j ACCEPT
 iptables -A INPUT -i "$WAN_IF" -p udp --dport $MINE_PORT_RANGE -j LOG_DROP
 
